@@ -64,6 +64,12 @@ class Upload extends FileUpload {
         'bundle' => $bundle->id(),
         $bundle->getTypeConfiguration()['source_field'] => $file,
       ]);
+
+      $filename = $file->filename->value;
+      if ($filename) {
+        $document->set('name', $filename);
+      }
+
       $document->save();
       $documents[] = $document;
     }
