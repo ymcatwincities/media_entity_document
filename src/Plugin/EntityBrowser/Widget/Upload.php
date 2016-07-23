@@ -3,8 +3,8 @@
 namespace Drupal\media_entity_document\Plugin\EntityBrowser\Widget;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\entity_browser\Plugin\EntityBrowser\Widget\Upload as FileUpload;
 use Drupal\Core\Url;
+use Drupal\entity_browser\Plugin\EntityBrowser\Widget\Upload as FileUpload;
 
 /**
  * Uses upload to create media entity documents.
@@ -100,28 +100,19 @@ class Upload extends FileUpload {
       $bundle_options[$bundle->id()] = $bundle->label();
     }
 
-    switch (count($bundle_options)) {
-      case 0:
-        $url = Url::fromRoute('media.bundle_add')->toString();
-        $form['media bundle'] = [
-          '#markup' => $this->t("You don't have media bundle of the Document type. You should <a href='!link'>create one</a>", ['!link' => $url]),
-        ];
-        break;
-
-      case 1:
-        $form['media bundle'] = [
-          '#value' => key($bundle_options),
-          '#type' => 'value',
-        ];
-        break;
-
-      default:
-        $form['media bundle'] = [
-          '#type' => 'select',
-          '#title' => $this->t('Media bundle'),
-          '#default_value' => $this->configuration['media bundle'],
-          '#options' => $bundle_options,
-        ];
+    if (empty($bundle_options)) {
+      $url = Url::fromRoute('media.bundle_add')->toString();
+      $form['media bundle'] = [
+        '#markup' => $this->t("You don't have media bundle of the Document type. You should <a href='!link'>create one</a>", ['!link' => $url]),
+      ];
+    }
+    else {
+      $form['media bundle'] = [
+        '#type' => 'select',
+        '#title' => $this->t('Media bundle'),
+        '#default_value' => $this->configuration['media bundle'],
+        '#options' => $bundle_options,
+      ];
     }
 
     return $form;
