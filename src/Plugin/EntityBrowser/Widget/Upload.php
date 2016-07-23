@@ -41,7 +41,7 @@ class Upload extends FileUpload {
     }
 
     $form = parent::getForm($original_form, $form_state, $aditional_widget_parameters);
-    $form['upload']['upload_validators']['file_validate_extensions'] = [$this->configuration['extensions']];
+    $form['upload']['#upload_validators']['file_validate_extensions'] = [$this->configuration['extensions']];
 
     return $form;
   }
