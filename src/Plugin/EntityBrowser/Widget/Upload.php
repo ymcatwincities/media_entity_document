@@ -32,7 +32,7 @@ class Upload extends FileUpload {
    */
   public function getForm(array &$original_form, FormStateInterface $form_state, array $aditional_widget_parameters) {
     /** @var \Drupal\media_entity\MediaBundleInterface $bundle */
-    if (!$this->configuration['media bundle'] || !($bundle = $this->entityManager->getStorage('media_bundle')->load($this->configuration['media bundle']))) {
+    if (!$this->configuration['media bundle'] || !($bundle = $this->entityTypeManager->getStorage('media_bundle')->load($this->configuration['media bundle']))) {
       return ['#markup' => $this->t('The media bundle is not configured correctly.')];
     }
 
@@ -53,14 +53,14 @@ class Upload extends FileUpload {
     $documents = [];
 
     /** @var \Drupal\media_entity\MediaBundleInterface $bundle */
-    $bundle = $this->entityManager
+    $bundle = $this->entityTypeManager
       ->getStorage('media_bundle')
       ->load($this->configuration['media bundle']);
     $files = $this->extractFiles($form_state);
 
     foreach ($files as $file) {
       /** @var \Drupal\media_entity\MediaInterface $document */
-      $document = $this->entityManager->getStorage('media')->create([
+      $document = $this->entityTypeManager->getStorage('media')->create([
         'bundle' => $bundle->id(),
         $bundle->getTypeConfiguration()['source_field'] => $file,
       ]);
@@ -92,7 +92,7 @@ class Upload extends FileUpload {
       '#required' => TRUE,
     ];
 
-    $bundles = $this->entityManager
+    $bundles = $this->entityTypeManager
       ->getStorage('media_bundle')
       ->loadByProperties(['type' => 'document']);
 
