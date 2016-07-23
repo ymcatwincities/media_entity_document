@@ -23,7 +23,7 @@ class Upload extends FileUpload {
   public function defaultConfiguration() {
     return [
       'extensions' => 'txt, pdf',
-      'media bundle' => NULL,
+      'media_bundle' => NULL,
     ] + parent::defaultConfiguration();
   }
 
@@ -32,7 +32,7 @@ class Upload extends FileUpload {
    */
   public function getForm(array &$original_form, FormStateInterface $form_state, array $aditional_widget_parameters) {
     /** @var \Drupal\media_entity\MediaBundleInterface $bundle */
-    if (!$this->configuration['media bundle'] || !($bundle = $this->entityTypeManager->getStorage('media_bundle')->load($this->configuration['media bundle']))) {
+    if (!$this->configuration['media_bundle'] || !($bundle = $this->entityTypeManager->getStorage('media_bundle')->load($this->configuration['media_bundle']))) {
       return ['#markup' => $this->t('The media bundle is not configured correctly.')];
     }
 
@@ -55,7 +55,7 @@ class Upload extends FileUpload {
     /** @var \Drupal\media_entity\MediaBundleInterface $bundle */
     $bundle = $this->entityTypeManager
       ->getStorage('media_bundle')
-      ->load($this->configuration['media bundle']);
+      ->load($this->configuration['media_bundle']);
     $files = $this->extractFiles($form_state);
 
     foreach ($files as $file) {
@@ -102,15 +102,15 @@ class Upload extends FileUpload {
 
     if (empty($bundle_options)) {
       $url = Url::fromRoute('media.bundle_add')->toString();
-      $form['media bundle'] = [
+      $form['media_bundle'] = [
         '#markup' => $this->t("You don't have media bundle of the Document type. You should <a href='!link'>create one</a>", ['!link' => $url]),
       ];
     }
     else {
-      $form['media bundle'] = [
+      $form['media_bundle'] = [
         '#type' => 'select',
         '#title' => $this->t('Media bundle'),
-        '#default_value' => $this->configuration['media bundle'],
+        '#default_value' => $this->configuration['media_bundle'],
         '#options' => $bundle_options,
       ];
     }
