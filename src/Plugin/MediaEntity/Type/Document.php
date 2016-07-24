@@ -59,6 +59,8 @@ class Document extends MediaTypeBase {
     $bundle = $form_state->getFormObject()->getEntity();
     $options = [];
     $allowed_field_types = ['file'];
+
+    /** @var \Drupal\Core\Field\FieldDefinitionInterface $field */
     foreach ($this->entityFieldManager->getFieldDefinitions('media', $bundle->id()) as $field_name => $field) {
       if (in_array($field->getType(), $allowed_field_types) && !$field->getFieldStorageDefinition()->isBaseField()) {
         $options[$field_name] = $field->getLabel();

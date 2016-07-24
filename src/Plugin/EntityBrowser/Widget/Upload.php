@@ -96,6 +96,7 @@ class Upload extends FileUpload {
       ->getStorage('media_bundle')
       ->loadByProperties(['type' => 'document']);
 
+    /** @var \Drupal\media_entity\MediaBundleInterface $bundle */
     foreach ($bundles as $bundle) {
       $bundle_options[$bundle->id()] = $bundle->label();
     }
