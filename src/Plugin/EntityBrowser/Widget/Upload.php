@@ -5,6 +5,7 @@ namespace Drupal\media_entity_document\Plugin\EntityBrowser\Widget;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 use Drupal\entity_browser\Plugin\EntityBrowser\Widget\Upload as FileUpload;
+use Drupal\media_entity\MediaInterface;
 
 /**
  * Uses upload to create media entity documents.
@@ -49,15 +50,15 @@ class Upload extends FileUpload {
   /**
    * {@inheritdoc}
    */
-  public function submit(array &$element, array &$form, FormStateInterface $form_state) {
-    $documents = [];
+  protected function prepareEntities(array $form, FormStateInterface $form_state) {
+    $files = parent::prepareEntities($form, $form_state);
 
     /** @var \Drupal\media_entity\MediaBundleInterface $bundle */
     $bundle = $this->entityTypeManager
       ->getStorage('media_bundle')
       ->load($this->configuration['media_bundle']);
-    $files = $this->extractFiles($form_state);
 
+    $documents = [];
     foreach ($files as $file) {
       /** @var \Drupal\media_entity\MediaInterface $document */
       $document = $this->entityTypeManager->getStorage('media')->create([
@@ -65,8 +66,8 @@ class Upload extends FileUpload {
         $bundle->getTypeConfiguration()['source_field'] => $file,
       ]);
 
-      $filename = $file->filename->value;
-      if ($filename) {
+      /** @var \Drupal\file\FileInterface $filename */
+      if ($filename = $file->getFilename()) {
         $document->set('name', $filename);
       }
 
@@ -74,8 +75,23 @@ class Upload extends FileUpload {
       $documents[] = $document;
     }
 
-    $this->selectEntities($documents, $form_state);
-    $this->clearFormValues($element, $form_state);
+    return $documents;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submit(array &$element, array &$form, FormStateInterface $form_state) {
+    if (!empty($form_state->getTriggeringElement()['#eb_widget_main_submit'])) {
+      $documents = $this->prepareEntities($form, $form_state);
+      array_walk(
+        $documents,
+        function (MediaInterface $media) { $media->save(); }
+      );
+
+      $this->selectEntities($documents, $form_state);
+      $this->clearFormValues($element, $form_state);
+    }
   }
 
   /**
