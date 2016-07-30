@@ -71,7 +71,6 @@ class Upload extends FileUpload {
         $document->set('name', $filename);
       }
 
-      $document->save();
       $documents[] = $document;
     }
 
