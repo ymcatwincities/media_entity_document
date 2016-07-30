@@ -113,7 +113,7 @@ class Document extends MediaTypeBase {
     $source_field = $this->configuration['source_field'];
 
     /** @var \Drupal\file\FileInterface $file */
-    if (!empty($source_field) && ($file = $media->{$source_field}->target_id)) {
+    if (!empty($source_field) && ($file = $media->{$source_field}->entity)) {
       return $file->getFilename();
     }
 
