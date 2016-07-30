@@ -66,11 +66,6 @@ class Upload extends FileUpload {
         $bundle->getTypeConfiguration()['source_field'] => $file,
       ]);
 
-      /** @var \Drupal\file\FileInterface $filename */
-      if ($filename = $file->getFilename()) {
-        $document->set('name', $filename);
-      }
-
       $documents[] = $document;
     }
 
