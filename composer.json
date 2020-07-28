@@ -1,5 +1,5 @@
 {
-  "name": "drupal/media_entity_document",
+  "name": "ymcatwincities/media_entity_document",
   "type": "drupal-module",
   "description": "Local file integration for Drupal Media entity.",
   "keywords": ["Drupal", "media", "document", "file"],
